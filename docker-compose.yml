@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  quinhentinho:
+    build: .
+    container_name: quinhentinho
+    restart: unless-stopped
+    volumes:
+      - ./.env:/app/.env
+    command: >
+      sh -c "npm run register && npm run start"
+    networks:
+      - quinhentinho_network
+
+networks:
+  quinhentinho_network:
+    driver: bridge 

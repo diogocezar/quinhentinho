@@ -127,3 +127,36 @@ quinhentinho/
 ## 📄 Licença
 
 Este projeto está licenciado sob a licença ISC.
+
+## 🐳 Docker
+
+Para facilitar a execução e implantação, você pode usar Docker:
+
+### Usando os scripts auxiliares
+
+1. Inicie o bot:
+```bash
+./start.sh
+```
+
+2. Pare o bot:
+```bash
+./stop.sh
+```
+
+### Comandos Docker manuais
+
+1. Construa e inicie o contêiner:
+```bash
+docker-compose up -d --build
+```
+
+2. Visualize os logs:
+```bash
+docker-compose logs -f
+```
+
+3. Pare o contêiner:
+```bash
+docker-compose down
+```
