@@ -12,14 +12,14 @@ const program = new Command();
 // Set up CLI options
 program
   .name("quinhentinho")
-  .description("Discord bot to collect and organize incidents")
+  .description("Bot do Discord para coletar e organizar incidentes")
   .version("1.0.0");
 
 program
   .command("start")
-  .description("Start the Discord bot")
+  .description("Iniciar o bot do Discord")
   .action(async () => {
-    console.log(chalk.blue("🤖 Starting Quinhentinho..."));
+    console.log(chalk.blue("🤖 Iniciando o Quinhentinho..."));
 
     // Create Discord client
     const client = new Client({
@@ -37,24 +37,24 @@ program
     // Login to Discord
     try {
       await client.login(process.env.DISCORD_TOKEN);
-      console.log(chalk.green("✅ Bot connected to Discord successfully!"));
+      console.log(chalk.green("✅ Bot conectado ao Discord com sucesso!"));
     } catch (error) {
-      console.error(chalk.red("❌ Error connecting the bot:"), error);
+      console.error(chalk.red("❌ Erro ao conectar o bot:"), error);
       process.exit(1);
     }
   });
 
 program
   .command("register")
-  .description("Register slash commands in Discord")
+  .description("Registrar comandos slash no Discord")
   .action(async () => {
-    console.log(chalk.blue("🔄 Registering slash commands..."));
+    console.log(chalk.blue("🔄 Registrando comandos slash..."));
 
     try {
       await registerCommands();
-      console.log(chalk.green("✅ Commands registered successfully!"));
+      console.log(chalk.green("✅ Comandos registrados com sucesso!"));
     } catch (error) {
-      console.error(chalk.red("❌ Error registering commands:"), error);
+      console.error(chalk.red("❌ Erro ao registrar comandos:"), error);
       process.exit(1);
     }
   });

@@ -8,45 +8,45 @@ const {
 
 // Define the incident slash command
 const incidentCommand = new SlashCommandBuilder()
-  .setName("incident")
-  .setDescription("Report a new incident");
+  .setName("incidente")
+  .setDescription("Reportar um novo incidente");
 
 // Create the modal for incident reporting
 function createIncidentModal() {
   const modal = new ModalBuilder()
     .setCustomId("incidentModal")
-    .setTitle("Report Incident");
+    .setTitle("Reportar Incidente");
 
   // Requester input
   const requesterInput = new TextInputBuilder()
     .setCustomId("requester")
-    .setLabel("Requester")
-    .setPlaceholder("Your full name")
+    .setLabel("Solicitante")
+    .setPlaceholder("Seu nome completo")
     .setStyle(TextInputStyle.Short)
     .setRequired(true);
 
   // Priority input
   const priorityInput = new TextInputBuilder()
     .setCustomId("priority")
-    .setLabel("Priority")
-    .setPlaceholder("LOW, MEDIUM or HIGH")
+    .setLabel("Prioridade")
+    .setPlaceholder("BAIXA, MÉDIA ou ALTA")
     .setStyle(TextInputStyle.Short)
     .setRequired(true);
 
   // Problem description
   const problemInput = new TextInputBuilder()
     .setCustomId("problem")
-    .setLabel("What happened?")
-    .setPlaceholder("Describe the problem in detail...")
+    .setLabel("O que aconteceu?")
+    .setPlaceholder("Descreva detalhadamente o problema...")
     .setStyle(TextInputStyle.Paragraph)
     .setRequired(true);
 
   // Affected client
   const clientInput = new TextInputBuilder()
     .setCustomId("client")
-    .setLabel("Affected client(s)")
+    .setLabel("Cliente(s) afetado(s)")
     .setPlaceholder(
-      "Client name and identification (License Plate, ULID, ID, etc.)"
+      "Nome do(s) cliente(s) e como identificá-los (Placa, ULID, ID, etc.)"
     )
     .setStyle(TextInputStyle.Short)
     .setRequired(true);
@@ -54,8 +54,8 @@ function createIncidentModal() {
   // Evidence
   const evidenceInput = new TextInputBuilder()
     .setCustomId("evidence")
-    .setLabel("Evidence")
-    .setPlaceholder("Links to Google Drive folder with screenshots, logs, etc.")
+    .setLabel("Evidências")
+    .setPlaceholder("Links para pasta do Google Drive com prints, logs, etc.")
     .setStyle(TextInputStyle.Paragraph)
     .setRequired(false);
 

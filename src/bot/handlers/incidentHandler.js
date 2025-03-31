@@ -14,7 +14,7 @@ async function handleIncidentSubmission(interaction) {
     // Acknowledge the interaction
     await interaction.deferReply({ ephemeral: true });
 
-    console.log(chalk.blue("📝 Processing new incident..."));
+    console.log(chalk.blue("📝 Processando novo incidente..."));
 
     // Get form values
     const requester = interaction.fields.getTextInputValue("requester");
@@ -90,48 +90,48 @@ async function handleIncidentSubmission(interaction) {
     );
 
     // Create thread in Discord
-    console.log(chalk.yellow("🧵 Creating Discord thread..."));
+    console.log(chalk.yellow("🧵 Criando tópico no Discord..."));
     const thread = await incidentsChannel.threads.create({
       name: discordTitle,
       autoArchiveDuration: 10080, // 1 week
-      reason: `Incident reported by ${requester}`,
+      reason: `Incidente reportado por ${requester}`,
     });
 
     // Send content to thread
     await thread.send({ content: markdownContent });
 
     // Create GitHub issue
-    console.log(chalk.yellow("🐙 Creating GitHub issue..."));
+    console.log(chalk.yellow("🐙 Criando issue no GitHub..."));
     const issueUrl = await createGitHubIssue(gitHubTitle, markdownContent);
 
     // Send a confirmation message with the issue URL
     await thread.send({
       content: evidence
-        ? `🔗 **GitHub issue created:** ${issueUrl}`
-        : `🔗 **GitHub issue created:** ${issueUrl}\n\n⚠️ *Remember to add evidence as needed.*`,
+        ? `🔗 **Issue criada no GitHub:** ${issueUrl}`
+        : `🔗 **Issue criada no GitHub:** ${issueUrl}\n\n⚠️ *Lembre-se de adicionar as evidências conforme necessário.*`,
     });
 
     // Reply to the interaction
     await interaction.editReply({
-      content: `✅ Incident registered successfully!\n🧵 A new thread was created in channel <#${process.env.DISCORD_INCIDENTS_CHANNEL_ID}>.\n🐙 A GitHub issue was created: ${issueUrl}`,
+      content: `✅ Incidente registrado com sucesso!\n🧵 Um novo tópico foi criado no canal <#${process.env.DISCORD_INCIDENTS_CHANNEL_ID}>.\n🐙 Uma issue foi criada no GitHub: ${issueUrl}`,
       ephemeral: true,
     });
 
-    console.log(chalk.green("✅ Incident processed successfully!"));
+    console.log(chalk.green("✅ Incidente processado com sucesso!"));
   } catch (error) {
-    console.error(chalk.red("❌ Error processing incident:"), error);
+    console.error(chalk.red("❌ Erro ao processar incidente:"), error);
 
     // Reply with error
     if (interaction.deferred || interaction.replied) {
       await interaction.editReply({
         content:
-          "❌ An error occurred while processing the incident. Please try again later.",
+          "❌ Ocorreu um erro ao processar o incidente. Por favor, tente novamente mais tarde.",
         ephemeral: true,
       });
     } else {
       await interaction.reply({
         content:
-          "❌ An error occurred while processing the incident. Please try again later.",
+          "❌ Ocorreu um erro ao processar o incidente. Por favor, tente novamente mais tarde.",
         ephemeral: true,
       });
     }

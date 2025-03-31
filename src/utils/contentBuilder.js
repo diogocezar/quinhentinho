@@ -16,28 +16,28 @@ function createIncidentContent(data) {
 
   // Build markdown content
   const markdownContent = `
-## 📝 Requester  
+## 📝 Solicitante  
 **${requester}**  
 
-## 📅 Date  
+## 📅 Data  
 **${date}**  
 
-## 🔥 Priority  
+## 🔥 Prioridade  
 ${priority}  
 
-## ❓ What happened?  
+## ❓ O que aconteceu?  
 ${problem}  
 
-## 🏢 Affected client(s)  
+## 🏢 Cliente(s) afetado(s)  
 ${client}  
 
-## 🔍 How to identify the client?  
+## 🔍 Como identificar o cliente?  
 ${identification}  
 
-## 📂 Evidence  
+## 📂 Evidências  
 ${
   evidence ||
-  "<Add links to Google Drive folder containing screenshots, logs or videos of the incident.>"
+  "<Adicione links para uma pasta do Google Drive contendo prints, logs ou vídeos do incidente.>"
 }  
 `;
 

@@ -10,7 +10,7 @@ const { handleIncidentSubmission } = require("./handlers/incidentHandler");
 function setupBot(client) {
   // Log when the bot is ready
   client.once(Events.ClientReady, () => {
-    console.log(chalk.green(`�� ${client.user.tag} is ready for use!`));
+    console.log(chalk.green(`🤖 ${client.user.tag} está pronto para uso!`));
   });
 
   // Handle interactions (commands, buttons, modals)
@@ -19,7 +19,7 @@ function setupBot(client) {
       // Handle slash commands
       if (interaction.isChatInputCommand()) {
         // Handle /incident command
-        if (interaction.commandName === "incident") {
+        if (interaction.commandName === "incidente") {
           const modal = createIncidentModal();
           await interaction.showModal(modal);
         }
@@ -32,19 +32,19 @@ function setupBot(client) {
         }
       }
     } catch (error) {
-      console.error(chalk.red("❌ Error processing interaction:"), error);
+      console.error(chalk.red("❌ Erro ao processar interação:"), error);
 
       // Reply to the user if possible
       if (interaction.deferred || interaction.replied) {
         await interaction.followUp({
           content:
-            "❌ An error occurred processing your command. Please try again later.",
+            "❌ Ocorreu um erro ao processar seu comando. Por favor, tente novamente mais tarde.",
           ephemeral: true,
         });
       } else {
         await interaction.reply({
           content:
-            "❌ An error occurred processing your command. Please try again later.",
+            "❌ Ocorreu um erro ao processar seu comando. Por favor, tente novamente mais tarde.",
           ephemeral: true,
         });
       }
