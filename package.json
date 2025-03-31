@@ -1,0 +1,34 @@
+{
+  "name": "quinhentinho",
+  "version": "1.0.0",
+  "description": "Sou o Quinhentinho, seu humilde coletor de incidentes! Se deu ruim, me chama. Se foi culpa sua… também me chama. 🔥🤖",
+  "main": "src/index.js",
+  "bin": {
+    "quinhentinho": "./src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js start",
+    "register": "node src/index.js register",
+    "dev": "nodemon src/index.js start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "incidents",
+    "github"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "date-fns": "^2.30.0",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "octokit": "^3.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
