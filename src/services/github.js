@@ -12,7 +12,7 @@ const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
  */
 async function createGitHubIssue(title, body) {
   try {
-    console.log(chalk.blue("🐙 Criando issue no GitHub..."));
+    console.log(chalk.blue("🐙 Creating GitHub issue..."));
 
     // Create the issue
     const { data: issue } = await octokit.rest.issues.create({
@@ -20,42 +20,109 @@ async function createGitHubIssue(title, body) {
       repo: process.env.GITHUB_REPO,
       title,
       body,
-      labels: ["incidente", "bug"],
+      labels: ["incident", "bug"],
     });
 
-    console.log(chalk.green(`✅ Issue criada: ${issue.html_url}`));
+    console.log(chalk.green(`✅ Issue created: ${issue.html_url}`));
 
     // Add the issue to the project
     try {
-      await addIssueToProject(issue.node_id);
+      if (process.env.GITHUB_PROJECT_NUMBER) {
+        await addIssueToProject(issue.node_id);
+      }
     } catch (projectError) {
       console.error(
         chalk.yellow(
-          `⚠️ Não foi possível adicionar a issue ao projeto: ${projectError.message}`
+          `⚠️ Could not add issue to project: ${projectError.message}`
         )
       );
     }
 
     return issue.html_url;
   } catch (error) {
-    console.error(chalk.red("❌ Erro ao criar issue no GitHub:"), error);
-    throw new Error(`Falha ao criar issue no GitHub: ${error.message}`);
+    console.error(chalk.red("❌ Error creating GitHub issue:"), error);
+    throw new Error(`Failed to create GitHub issue: ${error.message}`);
   }
 }
 
 /**
- * Add an issue to a GitHub project
+ * Obtém o ID do projeto e da coluna de destino
+ * @returns {Promise<Object>} - IDs do projeto e da coluna
+ */
+async function getProjectInfo() {
+  try {
+    // Primeiro obter o ID do projeto
+    const projectQuery = `
+      query {
+        organization(login: "${process.env.GITHUB_OWNER}") {
+          projectV2(number: ${process.env.GITHUB_PROJECT_NUMBER}) {
+            id
+            fields(first: 20) {
+              nodes {
+                ... on ProjectV2SingleSelectField {
+                  id
+                  name
+                  options {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const projectData = await octokit.graphql(projectQuery);
+    const projectId = projectData.organization.projectV2.id;
+
+    // Encontrar o campo de status e o valor "INCIDENTES"
+    let statusFieldId = null;
+    let incidentesOptionId = null;
+
+    const fields = projectData.organization.projectV2.fields.nodes;
+    for (const field of fields) {
+      if (field.name === "Status") {
+        statusFieldId = field.id;
+        for (const option of field.options) {
+          if (option.name === "INCIDENTES") {
+            incidentesOptionId = option.id;
+            break;
+          }
+        }
+        break;
+      }
+    }
+
+    return {
+      projectId,
+      statusFieldId,
+      incidentesOptionId,
+    };
+  } catch (error) {
+    console.error(chalk.red("❌ Error getting project information:"), error);
+    throw error;
+  }
+}
+
+/**
+ * Add an issue to a GitHub project and place it in the INCIDENTES column
  * @param {string} issueNodeId - Node ID of the issue
  */
 async function addIssueToProject(issueNodeId) {
   try {
-    console.log(chalk.blue("📋 Adicionando issue ao projeto..."));
+    console.log(chalk.blue("📋 Adding issue to project..."));
 
-    // The GraphQL mutation to add an item to a project
-    const mutation = `
+    // Obter informações do projeto
+    const { projectId, statusFieldId, incidentesOptionId } =
+      await getProjectInfo();
+
+    // Adicionar a issue ao projeto
+    const addItemMutation = `
       mutation {
         addProjectV2ItemById(input: {
-          projectId: "${process.env.GITHUB_PROJECT_ID}"
+          projectId: "${projectId}"
           contentId: "${issueNodeId}"
         }) {
           item {
@@ -65,13 +132,45 @@ async function addIssueToProject(issueNodeId) {
       }
     `;
 
-    // Execute the GraphQL mutation
-    const response = await octokit.graphql(mutation);
+    const addResponse = await octokit.graphql(addItemMutation);
+    const itemId = addResponse.addProjectV2ItemById.item.id;
 
-    console.log(chalk.green("✅ Issue adicionada ao projeto com sucesso!"));
-    return response;
+    console.log(chalk.green("✅ Issue added to project successfully!"));
+
+    // Se encontramos o campo de status e o valor INCIDENTES, mover o card para essa coluna
+    if (statusFieldId && incidentesOptionId) {
+      console.log(chalk.blue("🔄 Moving issue to INCIDENTES column..."));
+
+      const updateItemMutation = `
+        mutation {
+          updateProjectV2ItemFieldValue(input: {
+            projectId: "${projectId}"
+            itemId: "${itemId}"
+            fieldId: "${statusFieldId}"
+            value: { 
+              singleSelectOptionId: "${incidentesOptionId}"
+            }
+          }) {
+            projectV2Item {
+              id
+            }
+          }
+        }
+      `;
+
+      await octokit.graphql(updateItemMutation);
+      console.log(
+        chalk.green("✅ Issue moved to INCIDENTES column successfully!")
+      );
+    } else {
+      console.log(
+        chalk.yellow("⚠️ Could not locate INCIDENTES column in the project.")
+      );
+    }
+
+    return itemId;
   } catch (error) {
-    console.error(chalk.red("❌ Erro ao adicionar issue ao projeto:"), error);
+    console.error(chalk.red("❌ Error adding issue to project:"), error);
     throw error;
   }
 }

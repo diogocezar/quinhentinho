@@ -8,71 +8,71 @@ const {
 
 // Define the incident slash command
 const incidentCommand = new SlashCommandBuilder()
-  .setName("incidente")
-  .setDescription("Reportar um novo incidente");
+  .setName("incident")
+  .setDescription("Report a new incident");
 
 // Create the modal for incident reporting
 function createIncidentModal() {
   const modal = new ModalBuilder()
     .setCustomId("incidentModal")
-    .setTitle("Reportar Incidente");
+    .setTitle("Report Incident");
 
-  // Solicitante input
-  const solicitanteInput = new TextInputBuilder()
-    .setCustomId("solicitante")
-    .setLabel("Solicitante")
-    .setPlaceholder("Seu nome completo")
+  // Requester input
+  const requesterInput = new TextInputBuilder()
+    .setCustomId("requester")
+    .setLabel("Requester")
+    .setPlaceholder("Your full name")
     .setStyle(TextInputStyle.Short)
     .setRequired(true);
 
-  // Prioridade input
-  const prioridadeInput = new TextInputBuilder()
-    .setCustomId("prioridade")
-    .setLabel("Prioridade")
-    .setPlaceholder("BAIXA, MÉDIA ou ALTA")
+  // Priority input
+  const priorityInput = new TextInputBuilder()
+    .setCustomId("priority")
+    .setLabel("Priority")
+    .setPlaceholder("LOW, MEDIUM or HIGH")
     .setStyle(TextInputStyle.Short)
     .setRequired(true);
 
-  // Descrição do problema
-  const problemaInput = new TextInputBuilder()
-    .setCustomId("problema")
-    .setLabel("O que aconteceu?")
-    .setPlaceholder("Descreva detalhadamente o problema...")
+  // Problem description
+  const problemInput = new TextInputBuilder()
+    .setCustomId("problem")
+    .setLabel("What happened?")
+    .setPlaceholder("Describe the problem in detail...")
     .setStyle(TextInputStyle.Paragraph)
     .setRequired(true);
 
-  // Cliente afetado
-  const clienteInput = new TextInputBuilder()
-    .setCustomId("cliente")
-    .setLabel("Cliente(s) afetado(s)")
-    .setPlaceholder("Nome do(s) cliente(s)")
+  // Affected client
+  const clientInput = new TextInputBuilder()
+    .setCustomId("client")
+    .setLabel("Affected client(s)")
+    .setPlaceholder(
+      "Client name and identification (License Plate, ULID, ID, etc.)"
+    )
     .setStyle(TextInputStyle.Short)
     .setRequired(true);
 
-  // Identificação do cliente
-  const identificacaoInput = new TextInputBuilder()
-    .setCustomId("identificacao")
-    .setLabel("Como identificar o cliente?")
-    .setPlaceholder("Placa, ULID, ID do dispositivo, etc.")
-    .setStyle(TextInputStyle.Short)
-    .setRequired(true);
+  // Evidence
+  const evidenceInput = new TextInputBuilder()
+    .setCustomId("evidence")
+    .setLabel("Evidence")
+    .setPlaceholder("Links to Google Drive folder with screenshots, logs, etc.")
+    .setStyle(TextInputStyle.Paragraph)
+    .setRequired(false);
 
-  // Create action rows
-  const solicitanteRow = new ActionRowBuilder().addComponents(solicitanteInput);
-  const prioridadeRow = new ActionRowBuilder().addComponents(prioridadeInput);
-  const problemaRow = new ActionRowBuilder().addComponents(problemaInput);
-  const clienteRow = new ActionRowBuilder().addComponents(clienteInput);
-  const identificacaoRow = new ActionRowBuilder().addComponents(
-    identificacaoInput
-  );
+  // Create action rows - Discord só permite 5 action rows por modal
+  const requesterRow = new ActionRowBuilder().addComponents(requesterInput);
+  const priorityRow = new ActionRowBuilder().addComponents(priorityInput);
+  const problemRow = new ActionRowBuilder().addComponents(problemInput);
+  const clientRow = new ActionRowBuilder().addComponents(clientInput);
+  const evidenceRow = new ActionRowBuilder().addComponents(evidenceInput);
 
-  // Add inputs to the modal
+  // Add inputs to the modal - máximo de 5 componentes
   modal.addComponents(
-    solicitanteRow,
-    prioridadeRow,
-    problemaRow,
-    clienteRow,
-    identificacaoRow
+    requesterRow,
+    priorityRow,
+    problemRow,
+    clientRow,
+    evidenceRow
   );
 
   return modal;

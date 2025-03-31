@@ -11,7 +11,7 @@ async function registerCommands() {
   const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
 
   try {
-    console.log(chalk.yellow("🔄 Iniciando registro de comandos..."));
+    console.log(chalk.yellow("🔄 Starting command registration..."));
 
     // Register commands for a specific guild (server) - faster for development
     await rest.put(
@@ -22,9 +22,9 @@ async function registerCommands() {
       { body: commands }
     );
 
-    console.log(chalk.green("✅ Comandos registrados com sucesso!"));
+    console.log(chalk.green("✅ Commands registered successfully!"));
   } catch (error) {
-    console.error(chalk.red("❌ Erro ao registrar comandos:"), error);
+    console.error(chalk.red("❌ Error registering commands:"), error);
     throw error;
   }
 }

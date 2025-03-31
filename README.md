@@ -70,13 +70,14 @@ cp .env.example .env
 7. Preencha as outras variáveis do GitHub no `.env`:
    - `GITHUB_OWNER`: seu nome de usuário ou organização
    - `GITHUB_REPO`: nome do repositório onde as issues serão criadas
-   - `GITHUB_PROJECT_ID`: ID do projeto do GitHub (formato: `PN_xxxx`)
+   - `GITHUB_PROJECT_NUMBER`: número do projeto do GitHub (o número que aparece na URL)
+   - `GITHUB_PROJECT_TYPE`: tipo do projeto, use `user` para projetos pessoais ou `org` para projetos de organizações
 
-Para obter o ID do projeto:
+Para obter o número do projeto:
 1. Abra seu projeto no GitHub
 2. Observe a URL, por exemplo: `https://github.com/users/username/projects/1`
-3. O Project Number é o último número da URL (no exemplo: 1)
-4. Use o formato `PN_1` (substituindo 1 pelo número do seu projeto)
+3. O número do projeto é o último número da URL (no exemplo: 1)
+4. Configure `GITHUB_PROJECT_NUMBER=1` no seu arquivo `.env`
 
 ## 🚀 Uso
 

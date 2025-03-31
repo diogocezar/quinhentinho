@@ -5,51 +5,51 @@
  */
 function createIncidentContent(data) {
   const {
-    solicitante,
+    requester,
     date,
-    prioridade,
-    problema,
-    cliente,
-    identificacao,
-    evidencias,
+    priority,
+    problem,
+    client,
+    identification,
+    evidence,
   } = data;
 
   // Build markdown content
   const markdownContent = `
-## 📝 Solicitante  
-**${solicitante}**  
+## 📝 Requester  
+**${requester}**  
 
-## 📅 Data  
+## 📅 Date  
 **${date}**  
 
-## 🔥 Prioridade  
-${prioridade}  
+## 🔥 Priority  
+${priority}  
 
-## ❓ O que aconteceu?  
-${problema}  
+## ❓ What happened?  
+${problem}  
 
-## 🏢 Cliente(s) afetado(s)  
-${cliente}  
+## 🏢 Affected client(s)  
+${client}  
 
-## 🔍 Como identificar o cliente?  
-${identificacao}  
+## 🔍 How to identify the client?  
+${identification}  
 
-## 📂 Evidências  
+## 📂 Evidence  
 ${
-  evidencias ||
-  "<Adicione links para uma pasta do Google Drive contendo prints, logs ou vídeos do incidente.>"
+  evidence ||
+  "<Add links to Google Drive folder containing screenshots, logs or videos of the incident.>"
 }  
 `;
 
   // Create object with embed fields for Discord embeds if needed
   const embedContent = {
-    solicitante,
+    requester,
     date,
-    prioridade,
-    problema,
-    cliente,
-    identificacao,
-    evidencias: evidencias || "",
+    priority,
+    problem,
+    client,
+    identification,
+    evidence: evidence || "",
   };
 
   return { markdownContent, embedContent };
