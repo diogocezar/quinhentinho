@@ -71,6 +71,7 @@ cp .env.example .env
    - `GITHUB_OWNER`: seu nome de usuário ou organização
    - `GITHUB_REPO`: nome do repositório onde as issues serão criadas
    - `GITHUB_PROJECT_NUMBER`: número do projeto do GitHub (o número que aparece na URL)
+   - `GITHUB_INCIDENTS_COLUMN_NAME`: nome da coluna onde as issues serão adicionadas (padrão: "☠️ INCIDENTS")
 
 > ⚠️ **ATENÇÃO**: Se você não incluir o escopo `project` no seu token, o bot ainda funcionará, mas não conseguirá adicionar as issues ao projeto do GitHub automaticamente. Você terá que adicionar as issues manualmente ao projeto.
 

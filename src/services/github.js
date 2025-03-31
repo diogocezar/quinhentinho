@@ -20,7 +20,7 @@ async function createGitHubIssue(title, body) {
       repo: process.env.GITHUB_REPO,
       title,
       body,
-      labels: ["incidente", "bug"],
+      labels: ["incident"],
     });
 
     console.log(chalk.green(`✅ Issue criada: ${issue.html_url}`));
@@ -92,7 +92,7 @@ async function checkTokenScopes() {
  * Obtém o ID do projeto e da coluna de destino
  * @returns {Promise<Object>} - IDs do projeto e da coluna
  */
-async function getProjectInfo() {
+async function getProjectInfo(incidentsColumnName) {
   try {
     // Primeiro obter o ID do projeto
     const projectQuery = `
@@ -120,7 +120,7 @@ async function getProjectInfo() {
     const projectData = await octokit.graphql(projectQuery);
     const projectId = projectData.organization.projectV2.id;
 
-    // Encontrar o campo de status e o valor "INCIDENTES"
+    // Encontrar o campo de status e o valor "☠️ INCIDENTS"
     let statusFieldId = null;
     let incidentesOptionId = null;
 
@@ -129,7 +129,7 @@ async function getProjectInfo() {
       if (field.name === "Status") {
         statusFieldId = field.id;
         for (const option of field.options) {
-          if (option.name === "INCIDENTES") {
+          if (option.name === incidentsColumnName) {
             incidentesOptionId = option.id;
             break;
           }
@@ -157,9 +157,13 @@ async function addIssueToProject(issueNodeId) {
   try {
     console.log(chalk.blue("📋 Adicionando issue ao projeto..."));
 
+    // Obter o nome da coluna de incidentes da variável de ambiente ou usar o valor padrão
+    const incidentsColumnName =
+      process.env.GITHUB_INCIDENTS_COLUMN_NAME || "☠️ INCIDENTS";
+
     // Obter informações do projeto
     const { projectId, statusFieldId, incidentesOptionId } =
-      await getProjectInfo();
+      await getProjectInfo(incidentsColumnName);
 
     // Adicionar a issue ao projeto
     const addItemMutation = `
@@ -182,7 +186,9 @@ async function addIssueToProject(issueNodeId) {
 
     // Se encontramos o campo de status e o valor INCIDENTES, mover o card para essa coluna
     if (statusFieldId && incidentesOptionId) {
-      console.log(chalk.blue("🔄 Movendo issue para a coluna INCIDENTES..."));
+      console.log(
+        chalk.blue(`🔄 Movendo issue para a coluna "${incidentsColumnName}"...`)
+      );
 
       const updateItemMutation = `
         mutation {
@@ -203,12 +209,14 @@ async function addIssueToProject(issueNodeId) {
 
       await octokit.graphql(updateItemMutation);
       console.log(
-        chalk.green("✅ Issue movida para a coluna INCIDENTES com sucesso!")
+        chalk.green(
+          `✅ Issue movida para a coluna "${incidentsColumnName}" com sucesso!`
+        )
       );
     } else {
       console.log(
         chalk.yellow(
-          "⚠️ Não foi possível localizar a coluna INCIDENTES no projeto."
+          `⚠️ Não foi possível localizar a coluna "${incidentsColumnName}" no projeto.`
         )
       );
     }
