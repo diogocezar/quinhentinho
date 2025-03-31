@@ -64,7 +64,7 @@ async function handleIncidentSubmission(interaction) {
       0,
       50
     )}${problem.length > 50 ? "..." : ""}`;
-    const gitHubTitle = `🐙 [FIX] (${dateForTitle}) - ${client} - ${problem.substring(
+    const gitHubTitle = `🐙 [INCIDENT] (${dateForTitle}) - ${client} - ${problem.substring(
       0,
       50
     )}${problem.length > 50 ? "..." : ""}`;
