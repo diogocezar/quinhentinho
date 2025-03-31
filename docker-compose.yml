@@ -3,6 +3,7 @@ version: '3.8'
 services:
   quinhentinho:
     build: .
+    image: diogocezar/quinhentinho:latest
     container_name: quinhentinho
     restart: unless-stopped
     volumes:
