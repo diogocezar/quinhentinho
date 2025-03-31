@@ -62,16 +62,17 @@ cp .env.example .env
 1. Acesse [GitHub Personal Access Tokens](https://github.com/settings/tokens)
 2. Clique em "Generate new token" > "Generate new token (classic)"
 3. Adicione uma nota descritiva (ex: Quinhentinho Bot)
-4. Selecione os seguintes escopos:
+4. Selecione os seguintes escopos **OBRIGATÓRIOS**:
    - `repo` (para acesso completo aos repositórios)
-   - `project` (para acesso aos projetos)
+   - `project` (para acesso aos projetos) ou `read:project` e `write:project` (⚠️ **IMPORTANTE**: necessário para adicionar issues ao projeto)
 5. Clique em "Generate token" e copie o token gerado
 6. Adicione o token ao seu arquivo `.env` como `GITHUB_TOKEN`
 7. Preencha as outras variáveis do GitHub no `.env`:
    - `GITHUB_OWNER`: seu nome de usuário ou organização
    - `GITHUB_REPO`: nome do repositório onde as issues serão criadas
    - `GITHUB_PROJECT_NUMBER`: número do projeto do GitHub (o número que aparece na URL)
-   - `GITHUB_PROJECT_TYPE`: tipo do projeto, use `user` para projetos pessoais ou `org` para projetos de organizações
+
+> ⚠️ **ATENÇÃO**: Se você não incluir o escopo `project` no seu token, o bot ainda funcionará, mas não conseguirá adicionar as issues ao projeto do GitHub automaticamente. Você terá que adicionar as issues manualmente ao projeto.
 
 Para obter o número do projeto:
 1. Abra seu projeto no GitHub

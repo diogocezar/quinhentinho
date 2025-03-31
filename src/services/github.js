@@ -25,13 +25,41 @@ async function createGitHubIssue(title, body) {
 
     console.log(chalk.green(`✅ Issue criada: ${issue.html_url}`));
 
-    // Add the issue to the project
+    // Tentar adicionar a issue ao projeto, mas não falhar se der erro
     try {
+      // Verificar se temos todas as informações de projeto necessárias
       if (process.env.GITHUB_PROJECT_NUMBER) {
-        await addIssueToProject(issue.node_id);
+        // Verificar se o token tem os escopos necessários
+        const scopes = await checkTokenScopes();
+
+        if (
+          scopes.includes("project") ||
+          scopes.includes("read:project") ||
+          scopes.includes("write:project")
+        ) {
+          await addIssueToProject(issue.node_id);
+        } else {
+          console.log(
+            chalk.yellow(
+              "⚠️ Token GitHub não tem permissões de projeto (project, read:project, write:project)."
+            )
+          );
+          console.log(
+            chalk.yellow(
+              "⚠️ A issue não será adicionada ao projeto. Adicione manualmente ou atualize seu token."
+            )
+          );
+        }
+      } else {
+        console.log(
+          chalk.yellow(
+            "⚠️ Configuração do projeto GitHub incompleta. A issue não será adicionada ao projeto."
+          )
+        );
       }
     } catch (projectError) {
-      console.error(
+      // Não falhar completamente, apenas logar o erro
+      console.log(
         chalk.yellow(
           `⚠️ Não foi possível adicionar a issue ao projeto: ${projectError.message}`
         )
@@ -42,6 +70,21 @@ async function createGitHubIssue(title, body) {
   } catch (error) {
     console.error(chalk.red("❌ Erro ao criar issue no GitHub:"), error);
     throw new Error(`Falha ao criar issue no GitHub: ${error.message}`);
+  }
+}
+
+// Verificar os escopos do token GitHub
+async function checkTokenScopes() {
+  try {
+    const { headers } = await octokit.request("GET /");
+    const scopes = headers["x-oauth-scopes"] || "";
+    return scopes.split(", ");
+  } catch (error) {
+    console.error(
+      chalk.red("❌ Erro ao verificar permissões do token:"),
+      error
+    );
+    return [];
   }
 }
 
