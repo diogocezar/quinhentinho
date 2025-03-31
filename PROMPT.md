@@ -47,7 +47,7 @@ A criação do título do tópico no Discord deve seguir o padrão
 A criação do título da issue no GitHub deve ser:
 
 ```
-🐙 [FIX] (DATA) - CLIENTE - PROBLEMA
+🐙 [INCIDENT] (DATA) - CLIENTE - PROBLEMA
 ```
 
 Você pode criar um padrão 
